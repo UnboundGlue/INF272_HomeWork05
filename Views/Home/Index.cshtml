@@ -1,0 +1,116 @@
+﻿@model Super_Duper_Library_System.Controllers.HomeController.MyViewModel;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Books</h1>
+
+    @{
+        List<SelectListItem> listTypes = new List<SelectListItem>();
+        listTypes.Add(new SelectListItem
+            {
+                Text = "Select Type",
+                Value = null,
+                Selected = true
+            });
+        @foreach (var type in Model.Type)
+        {
+            listTypes.Add(new SelectListItem
+            {
+                Text = type.Name,
+                Value = type.Name,
+            });
+        }
+
+        List<SelectListItem> listAuthors = new List<SelectListItem>();
+        listAuthors.Add(new SelectListItem
+            {
+                Text = "Select Author",
+                Value = null,
+                Selected = true
+            });
+        @foreach (var author in Model.Authors)
+        {
+            listAuthors.Add(new SelectListItem
+            {
+                Text = author.Name,
+                Value = author.Id.ToString(),
+            });
+        }
+
+    }
+    <div class="d-flex flex-row justify-content-center" >
+    <div class="d-flex ">
+    @using (Html.BeginForm("Search", "Home", FormMethod.Post ))
+    {
+         <table class="table">
+           <tr>
+            
+          <th scope="col">  @Html.TextBox("searchText",null,new{@class="form-control", type = "text", placeholder = "Search Book"})</th>
+            
+            
+          <th scope="col">   @Html.DropDownList("type", new SelectList(listTypes,"Value","Text"), new {@class = "form-control"})</th>
+             
+             
+          <th scope="col">   @Html.DropDownList("author", new SelectList(listAuthors,"Value","Text"), new {@class = "form-control"})</th>
+             
+             
+          <th scope="col">   <button type="Submit" class = "btn btn-primary" style="width:100px">Search</button></th>
+
+               
+        
+        </tr>
+        </table>
+        
+    }
+        </div>
+        <div class="d-flex justify-content-center" >
+        <a href="@Url.Action("Index","Home")"><button   class = "btn btn-danger" style="width:100px; margin-top:8px">Clear</button></a>
+        </div>
+     </div>  
+    
+    
+       <!-- Html.ActionLink("Q2", "UpdateCountryNames", "Home", htmlAttributes: new { class = "btn btn-primary" })
+        Html.ActionLink("Q3", "DeleteInvalidCountryNames", "Home", htmlAttributes: new { class = "btn btn-danger" })
+        -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Author</th>
+                <th scope="col">Type</th>
+                <th scope="col">Page Count</th>
+                <th scope="col">Points</th>
+                <th scope="col">Status</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var info in Model.BookGeneralInfo)
+            {
+
+                <tr id =@info.Book.BookId>
+                    <td>@info.Book.BookId</td>
+                    <td>@info.Book.Name</td>
+                    <td>@info.AuthorName</td>
+                    <td>@info.Type</td>
+                    <td>@info.Book.PageCount</td>
+                    <td>@info.Book.Point</td>
+
+                    @if(info.Status == true)
+                    {
+                        <td>Available</td>
+                    } else
+                    {
+                        <td>Out</td>
+                    }
+
+                    <td>@Html.ActionLink("View", "BookDetails", "Home", new{bookId = @info.Book.BookId} , htmlAttributes: new { @class = "btn btn-primary" })</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,110 @@
+﻿@model Super_Duper_Library_System.Controllers.HomeController.MyStudentViewModel;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Students</h1>
+    <h1 class="display-4">#@Model.BookId @Model.BookName</h1>
+    @if(Model.Status == true)
+    {
+        <h2 style="color:green">Book Available</h2>
+    } else
+    {
+        <h2 style="color:red">- Book Out</h2>
+        
+    }
+
+
+    @{
+        List<SelectListItem> listClass = new List<SelectListItem>();
+        listClass.Add(new SelectListItem
+            {
+                Text = "Select a Class",
+                Value = null,
+                Selected = true
+            });
+        @foreach (var type in Model.Class)
+        {
+            listClass.Add(new SelectListItem
+            {
+                Text = type,
+                Value = type,
+            });
+        }
+
+
+    }
+    <div class="d-flex flex-row justify-content-center" >
+    <div class="d-flex ">
+    @using (Html.BeginForm("SearchStudent", "Home", FormMethod.Post ))
+    {
+          <table class="table">
+           <tr>
+            
+            <th scope="col">@Html.TextBox("searchText",null,new{@class="form-control", type = "text", placeholder = "Search Student Name"}) </th>
+            
+            
+            <th scope="col"> @Html.DropDownList("classNumber", new SelectList(listClass,"Value","Text"), new {@class = "form-control"})</th>
+     
+            <th scope="col"> <button type="Submit" class = "form-control btn btn-primary" style="width=100px">Search</button></th>
+           </tr>
+           </table>
+       
+        
+    }
+        
+         </div>
+        <div class="d-flex justify-content-center" >
+        <a href="@Url.Action("Student","Home", new {bookId = Model.BookId, bookName = Model.BookName})"><button   class = "btn btn-danger" style="width=100px; margin-top:8px">Clear</button></a>
+        </div>
+    </div>
+    
+    
+    
+       <!-- Html.ActionLink("Q2", "UpdateCountryNames", "Home", htmlAttributes: new { class = "btn btn-primary" })
+        Html.ActionLink("Q3", "DeleteInvalidCountryNames", "Home", htmlAttributes: new { class = "btn btn-danger" })
+        -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Surname</th>
+                <th scope="col">Class</th>
+                <th scope="col">Points</th>
+                @if(Model.Status == true)
+                {
+                    <th scope="col">Borrow Book</th> <!--TRUE == available-->
+                } else {
+                    <th scope="col">Return Book</th> <!--FALSE == out-->
+                }
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var info in Model.Students)
+            {
+
+                <tr id =@info.studentId>
+                    <td>@info.studentId</td>
+                    <td>@info.Name</td>
+                    <td>@info.Surname</td>
+                    <td>@info.Class</td>
+                    <td>@info.Point</td>
+                    @if(Model.Status == true)
+                    {
+                         <td>@Html.ActionLink("Borrow Book", "BorrowBook", "Home", new{bookId = @Model.BookId, studentId = info.studentId} , htmlAttributes: new { @class = "btn btn-primary" })</td>
+                    } else
+                    {
+                    @if(Model.BStudentId == info.studentId)
+                        {
+                            <td>@Html.ActionLink("Return Book", "ReturnBook", "Home", new{bookId = @Model.BookId, studentId = info.studentId} , htmlAttributes: new { @class = "btn btn-primary" })</td>
+                        }
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

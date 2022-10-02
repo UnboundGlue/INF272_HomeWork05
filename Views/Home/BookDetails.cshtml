@@ -1,0 +1,52 @@
+﻿@model Super_Duper_Library_System.Controllers.HomeController.MyBookViewModel;
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<div class="text-center">
+    <h1 class="display-4">@Model.BookName</h1> 
+    @if (Model.Status == true) 
+    { 
+        <h2 style="color:green">Book Available</h2>
+    } else
+    {
+        <h2 style="color:red">-Book Out</h2>
+    }
+
+
+   <h2 class="display-4"># Borrows @Model.BookDetail.Count</h2>
+   @Html.ActionLink("View Students", "Student", "Home", new {bookId = Model.BookId, bookName = Model.BookName} , htmlAttributes: new { @class = "btn btn-primary" })
+       <!-- Html.ActionLink("Q2", "UpdateCountryNames", "Home", htmlAttributes: new { class = "btn btn-primary" })
+        Html.ActionLink("Q3", "DeleteInvalidCountryNames", "Home", htmlAttributes: new { class = "btn btn-danger" })
+        -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Taken Date</th>
+                <th scope="col">Brought Date</th>
+                <th scope="col">Borrowed By</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var info in Model.BookDetail)
+            {
+
+                <tr>
+                    <td>@info.borrowId</td>
+                    <td>@info.takenDate</td>
+                    @if(info.BroughtDate == null)
+                    {
+                        <td>Out</td>
+                    } else
+                    {
+                        <td>@info.BroughtDate</td>
+                    }
+                    
+                    <td>@info.StudentName @info.StudentSurname</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
